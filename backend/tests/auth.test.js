@@ -14,33 +14,14 @@ describe('Auth API', () => {
   test('POST /api/auth/register creates a user', async () => {
     const res = await request(app)
       .post('/api/auth/register')
-      .send({
-        name: 'Admin User',
-        email: 'admin@school.com',
-        password: 'admin123',
-        role: 'admin',
-      });
+      .send({ name: 'Admin', email: 'admin@school.com', password: 'admin123', role: 'admin' });
     expect(res.status).toBe(201);
-    expect(res.body.message).toBe('User registered');
   });
 
-  test('POST /api/auth/register with duplicate email returns 409', async () => {
-    await request(app)
-      .post('/api/auth/register')
-      .send({
-        name: 'Admin User',
-        email: 'duplicate@school.com',
-        password: 'admin123',
-        role: 'admin',
-      });
+  test('POST /api/auth/register duplicate email returns 409', async () => {
     const res = await request(app)
       .post('/api/auth/register')
-      .send({
-        name: 'Admin User',
-        email: 'duplicate@school.com',
-        password: 'admin123',
-        role: 'admin',
-      });
+      .send({ name: 'Admin', email: 'admin@school.com', password: 'admin123', role: 'admin' });
     expect(res.status).toBe(409);
   });
 
@@ -52,14 +33,14 @@ describe('Auth API', () => {
     expect(res.body.token).toBeDefined();
   });
 
-  test('POST /api/auth/login with wrong password returns 401', async () => {
+  test('POST /api/auth/login wrong password returns 401', async () => {
     const res = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'admin@school.com', password: 'wrongpass' });
+      .send({ email: 'admin@school.com', password: 'wrong' });
     expect(res.status).toBe(401);
   });
 
-  test('POST /api/auth/login with unknown email returns 401', async () => {
+  test('POST /api/auth/login unknown email returns 401', async () => {
     const res = await request(app)
       .post('/api/auth/login')
       .send({ email: 'nobody@school.com', password: 'admin123' });

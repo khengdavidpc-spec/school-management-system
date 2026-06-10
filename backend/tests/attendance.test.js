@@ -10,21 +10,16 @@ beforeAll(async () => {
   await request(app)
     .post('/api/auth/register')
     .send({ name: 'Admin', email: 'admin@school.com', password: 'admin123', role: 'admin' });
-  const res = await request(app)
+  const loginRes = await request(app)
     .post('/api/auth/login')
     .send({ email: 'admin@school.com', password: 'admin123' });
-  token = res.body.token;
+  token = loginRes.body.token;
 
-  const student = await request(app)
+  const studentRes = await request(app)
     .post('/api/students')
     .set('Authorization', `Bearer ${token}`)
-    .send({
-      firstName: 'Test',
-      lastName: 'Student',
-      email: 'test@student.com',
-      grade: '10A',
-    });
-  studentId = student.body.id;
+    .send({ firstName: 'Test', lastName: 'Student', email: 'test@student.com', grade: '10A' });
+  studentId = studentRes.body.id;
 });
 
 afterAll(async () => {
@@ -51,12 +46,7 @@ describe('Attendance API', () => {
     const res = await request(app)
       .post('/api/attendance')
       .set('Authorization', `Bearer ${token}`)
-      .send({
-        studentId,
-        date: '2026-06-10',
-        status: 'present',
-        notes: 'On time',
-      });
+      .send({ studentId, date: '2026-06-10', status: 'present', notes: 'On time' });
     expect(res.status).toBe(201);
     expect(res.body.status).toBe('present');
     attendanceId = res.body.id;

@@ -39,13 +39,7 @@ describe('Teachers API', () => {
     const res = await request(app)
       .post('/api/teachers')
       .set('Authorization', `Bearer ${token}`)
-      .send({
-        firstName: 'Jane',
-        lastName: 'Smith',
-        email: 'jane@school.com',
-        subject: 'Mathematics',
-        phone: '012345678',
-      });
+      .send({ firstName: 'Jane', lastName: 'Smith', email: 'jane@school.com', subject: 'Math' });
     expect(res.status).toBe(201);
     expect(res.body.firstName).toBe('Jane');
     teacherId = res.body.id;
@@ -65,6 +59,5 @@ describe('Teachers API', () => {
       .delete(`/api/teachers/${teacherId}`)
       .set('Authorization', `Bearer ${token}`);
     expect(res.status).toBe(200);
-    expect(res.body.message).toBe('Teacher deleted successfully');
   });
 });

@@ -2,8 +2,17 @@ const request = require('supertest');
 const app = require('../src/app');
 const { sequelize } = require('../src/models');
 
+let token;
+
 beforeAll(async () => {
   await sequelize.sync({ force: true });
+  await request(app)
+    .post('/api/auth/register')
+    .send({ name: 'Admin', email: 'admin@school.com', password: 'admin123', role: 'admin' });
+  const res = await request(app)
+    .post('/api/auth/login')
+    .send({ email: 'admin@school.com', password: 'admin123' });
+  token = res.body.token;
 });
 
 afterAll(async () => {
@@ -18,45 +27,8 @@ describe('Health Check', () => {
   });
 });
 
-describe('Auth API', () => {
-  test('POST /api/auth/register creates a user', async () => {
-    const res = await request(app)
-      .post('/api/auth/register')
-      .send({
-        name: 'Admin User',
-        email: 'admin@school.com',
-        password: 'admin123',
-        role: 'admin',
-      });
-    expect(res.status).toBe(201);
-    expect(res.body.message).toBe('User registered');
-  });
-
-  test('POST /api/auth/login returns token', async () => {
-    const res = await request(app)
-      .post('/api/auth/login')
-      .send({ email: 'admin@school.com', password: 'admin123' });
-    expect(res.status).toBe(200);
-    expect(res.body.token).toBeDefined();
-  });
-
-  test('POST /api/auth/login with wrong password returns 401', async () => {
-    const res = await request(app)
-      .post('/api/auth/login')
-      .send({ email: 'admin@school.com', password: 'wrongpass' });
-    expect(res.status).toBe(401);
-  });
-});
-
 describe('Students API', () => {
-  let token;
-
-  beforeAll(async () => {
-    const res = await request(app)
-      .post('/api/auth/login')
-      .send({ email: 'admin@school.com', password: 'admin123' });
-    token = res.body.token;
-  });
+  let studentId;
 
   test('GET /api/students without token returns 401', async () => {
     const res = await request(app).get('/api/students');
@@ -75,13 +47,25 @@ describe('Students API', () => {
     const res = await request(app)
       .post('/api/students')
       .set('Authorization', `Bearer ${token}`)
-      .send({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john@student.com',
-        grade: '10A',
-      });
+      .send({ firstName: 'John', lastName: 'Doe', email: 'john@student.com', grade: '10A' });
     expect(res.status).toBe(201);
     expect(res.body.firstName).toBe('John');
+    studentId = res.body.id;
+  });
+
+  test('PUT /api/students/:id updates a student', async () => {
+    const res = await request(app)
+      .put(`/api/students/${studentId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ grade: '11A' });
+    expect(res.status).toBe(200);
+    expect(res.body.grade).toBe('11A');
+  });
+
+  test('DELETE /api/students/:id deletes a student', async () => {
+    const res = await request(app)
+      .delete(`/api/students/${studentId}`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.status).toBe(200);
   });
 });
