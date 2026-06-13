@@ -12,6 +12,7 @@ const studentRoutes    = require('./routes/studentRoutes');
 const teacherRoutes    = require('./routes/teacherRoutes');
 const attendanceRoutes = require('./routes/attendanceRoutes');
 const classRoutes      = require('./routes/classRoutes');
+const gradeRoutes      = require('./routes/gradeRoutes');
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use('/api/students',   studentRoutes);
 app.use('/api/teachers',   teacherRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/classes',    classRoutes);
+app.use('/api/grades',     gradeRoutes);
 
 // Error handler (must be last)
 app.use(errorHandler);

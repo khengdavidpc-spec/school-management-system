@@ -1,5 +1,11 @@
 const { Class, Teacher, Student } = require('../models');
 
+const cleanClassPayload = (body) => ({
+  ...body,
+  teacherId: body.teacherId || null,
+  capacity: body.capacity === '' || body.capacity === undefined ? 30 : Number(body.capacity),
+});
+
 exports.getAll = async (req, res, next) => {
   try {
     const classes = await Class.findAll({
@@ -28,7 +34,7 @@ exports.getOne = async (req, res, next) => {
 
 exports.create = async (req, res, next) => {
   try {
-    const cls = await Class.create(req.body);
+    const cls = await Class.create(cleanClassPayload(req.body));
     res.status(201).json(cls);
   } catch (err) { next(err); }
 };
@@ -37,7 +43,7 @@ exports.update = async (req, res, next) => {
   try {
     const cls = await Class.findByPk(req.params.id);
     if (!cls) return res.status(404).json({ message: 'Class not found' });
-    await cls.update(req.body);
+    await cls.update(cleanClassPayload(req.body));
     res.json(cls);
   } catch (err) { next(err); }
 };

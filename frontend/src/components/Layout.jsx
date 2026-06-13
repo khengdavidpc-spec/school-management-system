@@ -6,12 +6,18 @@ const navItems = [
   { to: '/teachers',   icon: '👨‍🏫', label: 'Teachers'   },
   { to: '/classes',    icon: '📚', label: 'Classes'    },
   { to: '/attendance', icon: '📋', label: 'Attendance' },
+  { to: '/payroll',    icon: '💰', label: 'Payroll'    },
+  { to: '/reports',    icon: '📈', label: 'Reports'    },
 ];
 
 export default function Layout() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const logout = () => { localStorage.clear(); navigate('/login'); };
+
+  const filteredNavItems = user.role === 'admin'
+    ? navItems
+    : navItems.filter(item => !item.to.includes('/payroll') && !item.to.includes('/reports'));
 
   return (
     <div style={s.root}>
@@ -26,7 +32,7 @@ export default function Layout() {
 
         <div style={s.navSection}>
           <div style={s.navLabel}>MAIN MENU</div>
-          {navItems.map((item) => (
+          {filteredNavItems.map((item) => (
             <NavLink key={item.to} to={item.to}
               style={({ isActive }) => ({ ...s.navItem, ...(isActive ? s.navActive : {}) })}>
               <span style={s.navIcon}>{item.icon}</span>

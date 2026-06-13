@@ -11,12 +11,27 @@ export default function Navbar() {
     navigate('/login');
   };
 
-  const links = [
+  const allLinks = [
     { to: '/dashboard', label: 'Dashboard', icon: '📊' },
     { to: '/students',  label: 'Students',  icon: '🎓' },
     { to: '/teachers',  label: 'Teachers',  icon: '👨‍🏫' },
+    { to: '/classes',   label: 'Classes',   icon: '📚' },
     { to: '/attendance', label: 'Attendance', icon: '📋' },
+    { to: '/payroll',   label: 'Payroll',   icon: '💰' },
+    { to: '/reports',   label: 'Reports',   icon: '📈' },
   ];
+
+  const getVisibleLinks = () => {
+    if (!user.role) return [allLinks[0]];
+
+    if (user.role === 'admin') return allLinks;
+    if (user.role === 'teacher') return [allLinks[0], allLinks[4], allLinks[5], allLinks[6]];
+    if (user.role === 'student') return [allLinks[0], allLinks[4]];
+
+    return [allLinks[0]];
+  };
+
+  const visibleLinks = getVisibleLinks();
 
   return (
     <nav style={styles.nav}>
@@ -29,7 +44,7 @@ export default function Navbar() {
       </div>
 
       <div style={styles.links}>
-        {links.map((link) => (
+        {visibleLinks.map((link) => (
           <Link
             key={link.to}
             style={{

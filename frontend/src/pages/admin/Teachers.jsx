@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import api from '../services/api';
+import api from '../../services/api';
 
 const SUBJECTS = ['Math', 'Khmer', 'English', 'Chinese', 'Computer'];
-const empty = { firstName: '', lastName: '', sex: '', email: '', phone: '', subject: '', classId: '' };
+const empty = { firstName: '', lastName: '', sex: '', email: '', phone: '', subject: '' };
 
-export default function TeachersPage() {
+export default function AdminTeachers() {
   const [teachers, setTeachers] = useState([]);
   const [classes, setClasses]   = useState([]);
   const [form, setForm]         = useState(empty);
@@ -15,14 +15,9 @@ export default function TeachersPage() {
   const [selected, setSelected] = useState(null);
 
   const load = async () => {
-    const [rt, rc] = await Promise.all([
-      api.get('/teachers'),
-      api.get('/classes').catch(() => ({ data: [] })),
-    ]);
-    setTeachers(rt.data);
-    setClasses(rc.data);
+    const [rt, rc] = await Promise.all([api.get('/teachers'), api.get('/classes').catch(() => ({ data: [] }))]);
+    setTeachers(rt.data); setClasses(rc.data);
   };
-
   useEffect(() => { load(); }, []);
 
   const handleSubmit = async (e) => {
@@ -35,7 +30,7 @@ export default function TeachersPage() {
   };
 
   const handleEdit = (t) => {
-    setForm({ firstName: t.firstName, lastName: t.lastName, sex: t.sex || '', email: t.email, phone: t.phone || '', subject: t.subject, classId: t.classId || '' });
+    setForm({ firstName: t.firstName, lastName: t.lastName, sex: t.sex || '', email: t.email, phone: t.phone || '', subject: t.subject });
     setEditId(t.id); setShowForm(true); setSelected(null);
   };
 
@@ -49,160 +44,89 @@ export default function TeachersPage() {
   const COLORS = ['#8b5cf6','#f97316','#22d3ee','#10b981','#ef4444','#f59e0b'];
 
   return (
-    <div style={s.page}>
-      <div style={s.header}>
-        <div>
-          <h1 style={s.title}>Teachers</h1>
-          <p style={s.sub}>{teachers.length} teachers registered</p>
-        </div>
-        <button style={s.addBtn} onClick={() => { setShowForm(!showForm); setForm(empty); setEditId(null); setSelected(null); }}>
-          {showForm ? '✕ Cancel' : '+ Add Teacher'}
-        </button>
+    <div style={p.page}>
+      <div style={p.header}>
+        <div><h1 style={p.title}>Teachers</h1><p style={p.sub}>{teachers.length} teachers registered</p></div>
+        <button style={p.addBtn} onClick={() => { setShowForm(true); setForm(empty); setEditId(null); setSelected(null); }}>+ Add Teacher</button>
       </div>
 
-      {/* Modal form */}
       {showForm && (
-        <div style={s.overlay}>
-          <div style={s.modal}>
-            <div style={s.modalHeader}>
-              <h2 style={s.modalTitle}>{editId ? '✏️ Edit Teacher' : '👨‍🏫 Add New Teacher'}</h2>
-              <button style={s.closeBtn} onClick={() => { setShowForm(false); setForm(empty); setEditId(null); }}>✕</button>
+        <div style={p.overlay}>
+          <div style={p.modal}>
+            <div style={p.modalHeader}>
+              <h2 style={p.modalTitle}>{editId ? '✏️ Edit Teacher' : '👨‍🏫 Add New Teacher'}</h2>
+              <button style={p.closeBtn} onClick={() => { setShowForm(false); setForm(empty); setEditId(null); }}>✕</button>
             </div>
-
-            {error && <div style={s.error}>{error}</div>}
-
+            {error && <div style={p.error}>{error}</div>}
             <form onSubmit={handleSubmit}>
-              <div style={s.formGrid}>
-                <div style={s.field}>
-                  <label style={s.label}>First Name <span style={s.req}>*</span></label>
-                  <input style={s.input} placeholder="Enter first name" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} required />
-                </div>
-                <div style={s.field}>
-                  <label style={s.label}>Last Name <span style={s.req}>*</span></label>
-                  <input style={s.input} placeholder="Enter last name" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} required />
-                </div>
-                <div style={s.field}>
-                  <label style={s.label}>Sex <span style={s.req}>*</span></label>
-                  <select style={s.input} value={form.sex} onChange={(e) => setForm({ ...form, sex: e.target.value })} required>
-                    <option value="">Select sex</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                <div style={s.field}>
-                  <label style={s.label}>Email <span style={s.req}>*</span></label>
-                  <input style={s.input} type="email" placeholder="teacher@school.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
-                </div>
-                <div style={s.field}>
-                  <label style={s.label}>Phone Number</label>
-                  <input style={s.input} placeholder="012 345 678" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-                </div>
-                <div style={s.field}>
-                  <label style={s.label}>Subject <span style={s.req}>*</span></label>
-                  <select style={s.input} value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} required>
-                    <option value="">Select subject</option>
-                    {SUBJECTS.map((sub) => <option key={sub} value={sub}>{sub}</option>)}
-                  </select>
-                </div>
-                <div style={{ ...s.field, gridColumn: '1 / -1' }}>
-                  <label style={s.label}>Assign to Class</label>
-                  <select style={s.input} value={form.classId} onChange={(e) => setForm({ ...form, classId: e.target.value })}>
-                    <option value="">Select class (optional)</option>
-                    {classes.map((c) => <option key={c.id} value={c.id}>{c.name} — {c.grade}</option>)}
-                  </select>
-                </div>
+              <div style={p.formGrid}>
+                <div style={p.field}><label style={p.label}>First Name <span style={p.req}>*</span></label><input style={p.input} placeholder="Jane" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} required /></div>
+                <div style={p.field}><label style={p.label}>Last Name <span style={p.req}>*</span></label><input style={p.input} placeholder="Smith" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} required /></div>
+                <div style={p.field}><label style={p.label}>Sex <span style={p.req}>*</span></label><select style={p.input} value={form.sex} onChange={(e) => setForm({ ...form, sex: e.target.value })} required><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
+                <div style={p.field}><label style={p.label}>Email <span style={p.req}>*</span></label><input style={p.input} type="email" placeholder="jane@school.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required /></div>
+                <div style={p.field}><label style={p.label}>Phone</label><input style={p.input} placeholder="012 345 678" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></div>
+                <div style={p.field}><label style={p.label}>Subject <span style={p.req}>*</span></label><select style={p.input} value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} required><option value="">Select subject</option>{SUBJECTS.map((sub) => <option key={sub} value={sub}>{sub}</option>)}</select></div>
               </div>
-              <div style={s.modalFooter}>
-                <button type="button" style={s.cancelBtn} onClick={() => { setShowForm(false); setForm(empty); setEditId(null); }}>Cancel</button>
-                <button type="submit" style={s.submitBtn}>{editId ? 'Update Teacher' : 'Add Teacher'}</button>
+              <div style={p.modalFooter}>
+                <button type="button" style={p.cancelBtn} onClick={() => { setShowForm(false); setForm(empty); setEditId(null); }}>Cancel</button>
+                <button type="submit" style={p.submitBtn}>{editId ? 'Update' : 'Add Teacher'}</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      <div style={s.twoCol}>
-        <div style={s.tableCard}>
-          <div style={s.tableTop}>
-            <span style={s.tableTitle}>All Teachers</span>
-            <input style={s.search} placeholder="🔍 Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+      <div style={p.twoCol}>
+        <div style={p.tableCard}>
+          <div style={p.tableTop}>
+            <span style={p.tableTitle}>All Teachers</span>
+            <input style={p.search} placeholder="🔍 Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
-          <table style={s.table}>
-            <thead><tr style={s.thead}>
-              <th style={s.th}>#</th>
-              <th style={s.th}>Teacher</th>
-              <th style={s.th}>Sex</th>
-              <th style={s.th}>Subject</th>
-              <th style={s.th}>Classes</th>
-              <th style={s.th}>Status</th>
-              <th style={s.th}>Actions</th>
-            </tr></thead>
+          <table style={p.table}>
+            <thead><tr style={p.thead}><th style={p.th}>#</th><th style={p.th}>Teacher</th><th style={p.th}>Sex</th><th style={p.th}>Subject</th><th style={p.th}>Classes</th><th style={p.th}>Status</th><th style={p.th}>Actions</th></tr></thead>
             <tbody>
-              {filtered.length === 0
-                ? <tr><td colSpan="7" style={s.empty}>No teachers found</td></tr>
+              {filtered.length === 0 ? <tr><td colSpan="7" style={p.empty}>No teachers found</td></tr>
                 : filtered.map((t, i) => {
                   const tClasses = getTeacherClasses(t.id);
                   return (
-                    <tr key={t.id} style={{ ...s.tr, ...(selected?.id === t.id ? s.trSelected : {}) }}
-                      onClick={() => setSelected(selected?.id === t.id ? null : t)}>
-                      <td style={{ ...s.td, color: '#94a3b8', fontSize: '0.78rem' }}>{i + 1}</td>
-                      <td style={s.td}>
-                        <div style={s.nameCell}>
-                          <div style={{ ...s.avatar, background: COLORS[i % COLORS.length] }}>
-                            {t.firstName?.charAt(0)}{t.lastName?.charAt(0)}
-                          </div>
-                          <div>
-                            <div style={s.name}>{t.firstName} {t.lastName}</div>
-                            <div style={s.nameId}>{t.email}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td style={s.td}>
-                        <span style={{ ...s.sexBadge, background: t.sex === 'Female' ? '#fce7f3' : t.sex === 'Male' ? '#e0f2fe' : '#f1f5f9', color: t.sex === 'Female' ? '#be185d' : t.sex === 'Male' ? '#0369a1' : '#64748b' }}>
-                          {t.sex || '—'}
-                        </span>
-                      </td>
-                      <td style={s.td}><span style={s.subjectBadge}>{t.subject}</span></td>
-                      <td style={s.td}><span style={s.classBadge}>{tClasses.length} classes</span></td>
-                      <td style={s.td}><span style={t.status === 'active' ? s.badgeGreen : s.badgeGray}>{t.status}</span></td>
-                      <td style={s.td} onClick={(e) => e.stopPropagation()}>
-                        <button style={s.editBtn} onClick={() => handleEdit(t)}>Edit</button>
-                        <button style={s.deleteBtn} onClick={() => handleDelete(t.id)}>Delete</button>
-                      </td>
+                    <tr key={t.id} style={{ ...p.tr, ...(selected?.id === t.id ? p.trSelected : {}) }} onClick={() => setSelected(selected?.id === t.id ? null : t)}>
+                      <td style={{ ...p.td, color: '#94a3b8', fontSize: '0.78rem' }}>{i + 1}</td>
+                      <td style={p.td}><div style={p.nameCell}><div style={{ ...p.avatar, background: COLORS[i % COLORS.length] }}>{t.firstName?.charAt(0)}{t.lastName?.charAt(0)}</div><div><div style={p.name}>{t.firstName} {t.lastName}</div><div style={p.nameId}>{t.email}</div></div></div></td>
+                      <td style={p.td}><span style={{ background: t.sex === 'Female' ? '#fce7f3' : t.sex === 'Male' ? '#e0f2fe' : '#f1f5f9', color: t.sex === 'Female' ? '#be185d' : t.sex === 'Male' ? '#0369a1' : '#64748b', padding: '0.22rem 0.7rem', borderRadius: '20px', fontSize: '0.78rem', fontWeight: '600' }}>{t.sex || '—'}</span></td>
+                      <td style={p.td}><span style={p.subjectBadge}>{t.subject}</span></td>
+                      <td style={p.td}><span style={p.classBadge}>{tClasses.length} classes</span></td>
+                      <td style={p.td}><span style={t.status === 'active' ? p.badgeGreen : p.badgeGray}>{t.status}</span></td>
+                      <td style={p.td} onClick={(e) => e.stopPropagation()}><button style={p.editBtn} onClick={() => handleEdit(t)}>Edit</button><button style={p.deleteBtn} onClick={() => handleDelete(t.id)}>Delete</button></td>
                     </tr>
                   );
                 })}
             </tbody>
           </table>
-          <div style={s.tableFooter}>Showing {filtered.length} of {teachers.length} teachers</div>
+          <div style={p.tableFooter}>Showing {filtered.length} of {teachers.length} teachers</div>
         </div>
 
         {selected && (
-          <div style={s.detailPanel}>
-            <div style={s.detailHeader}>
-              <div style={s.detailAvatar}>{selected.firstName?.charAt(0)}{selected.lastName?.charAt(0)}</div>
-              <button style={s.detailClose} onClick={() => setSelected(null)}>✕</button>
+          <div style={p.detailPanel}>
+            <div style={p.detailHeader}>
+              <div style={p.detailAvatar}>{selected.firstName?.charAt(0)}{selected.lastName?.charAt(0)}</div>
+              <button style={p.detailClose} onClick={() => setSelected(null)}>✕</button>
             </div>
-            <div style={s.detailName}>{selected.firstName} {selected.lastName}</div>
-            <div style={s.detailSub}>{selected.subject} Teacher</div>
-            <div style={s.detailInfo}>
-              <div style={s.detailRow}><span style={s.detailKey}>📧 Email</span><span style={s.detailVal}>{selected.email}</span></div>
-              <div style={s.detailRow}><span style={s.detailKey}>📱 Phone</span><span style={s.detailVal}>{selected.phone || '—'}</span></div>
-              <div style={s.detailRow}><span style={s.detailKey}>👤 Sex</span><span style={s.detailVal}>{selected.sex || '—'}</span></div>
-              <div style={s.detailRow}><span style={s.detailKey}>📚 Subject</span><span style={s.detailVal}>{selected.subject}</span></div>
+            <div style={p.detailName}>{selected.firstName} {selected.lastName}</div>
+            <div style={p.detailSub}>{selected.subject} Teacher</div>
+            <div style={p.detailInfo}>
+              <div style={p.detailRow}><span style={p.detailKey}>📧 Email</span><span style={p.detailVal}>{selected.email}</span></div>
+              <div style={p.detailRow}><span style={p.detailKey}>📱 Phone</span><span style={p.detailVal}>{selected.phone || '—'}</span></div>
+              <div style={p.detailRow}><span style={p.detailKey}>👤 Sex</span><span style={p.detailVal}>{selected.sex || '—'}</span></div>
+              <div style={p.detailRow}><span style={p.detailKey}>📚 Subject</span><span style={p.detailVal}>{selected.subject}</span></div>
             </div>
-            <div style={s.detailSectionTitle}>Assigned Classes ({getTeacherClasses(selected.id).length})</div>
-            <div style={s.classList}>
+            <div style={p.detailSectionTitle}>Classes ({getTeacherClasses(selected.id).length})</div>
+            <div style={p.classList}>
               {getTeacherClasses(selected.id).length === 0
-                ? <div style={s.noClasses}>No classes assigned</div>
+                ? <div style={p.noClasses}>No classes assigned</div>
                 : getTeacherClasses(selected.id).map((c, i) => (
-                  <div key={c.id} style={s.classItem}>
-                    <div style={{ ...s.classItemIcon, background: COLORS[i % COLORS.length] + '20', color: COLORS[i % COLORS.length] }}>📚</div>
-                    <div>
-                      <div style={s.classItemName}>{c.name}</div>
-                      <div style={s.classItemGrade}>{c.grade} • {c.students?.length || 0} students</div>
-                    </div>
+                  <div key={c.id} style={p.classItem}>
+                    <div style={{ ...p.classItemIcon, background: COLORS[i % COLORS.length] + '20', color: COLORS[i % COLORS.length] }}>📚</div>
+                    <div><div style={p.classItemName}>{c.name}</div><div style={p.classItemGrade}>{c.grade} • {c.students?.length || 0} students</div></div>
                   </div>
                 ))}
             </div>
@@ -213,7 +137,7 @@ export default function TeachersPage() {
   );
 }
 
-const s = {
+const p = {
   page:        { padding: '2rem 2.5rem' },
   header:      { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' },
   title:       { fontSize: '1.75rem', fontWeight: '800', color: '#1e293b' },
@@ -248,7 +172,6 @@ const s = {
   avatar:      { width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: '700', fontSize: '0.75rem', flexShrink: 0 },
   name:        { fontWeight: '600', color: '#1e293b', fontSize: '0.875rem' },
   nameId:      { fontSize: '0.72rem', color: '#94a3b8' },
-  sexBadge:    { padding: '0.22rem 0.7rem', borderRadius: '20px', fontSize: '0.78rem', fontWeight: '600' },
   subjectBadge: { background: '#ede9fe', color: '#7c3aed', padding: '0.22rem 0.7rem', borderRadius: '20px', fontSize: '0.78rem', fontWeight: '600' },
   classBadge:  { background: '#fff7ed', color: '#f97316', padding: '0.22rem 0.7rem', borderRadius: '20px', fontSize: '0.78rem', fontWeight: '600' },
   badgeGreen:  { background: '#d1fae5', color: '#065f46', padding: '0.22rem 0.7rem', borderRadius: '20px', fontSize: '0.78rem', fontWeight: '600' },
