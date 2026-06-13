@@ -3,12 +3,10 @@ import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, R
 import api from '../../services/api';
 
 const weekData = [
-  { week: 'Week 1', present: 45, absent: 12 },
-  { week: 'Week 2', present: 62, absent: 8  },
-  { week: 'Week 3', present: 78, absent: 15 },
-  { week: 'Week 4', present: 55, absent: 10 },
-  { week: 'Week 5', present: 90, absent: 6  },
-  { week: 'Week 6', present: 72, absent: 9  },
+  { week: 'Week 1', present: 1, absent: 0 },
+  { week: 'Week 2', present: 0, absent: 0  },
+  { week: 'Week 3', present: 0, absent: 0 },
+  { week: 'Week 4', present: 0, absent: 0 },
 ];
 
 export default function AdminDashboard() {
@@ -38,9 +36,9 @@ export default function AdminDashboard() {
   ];
 
   const genderData = [
-    { name: 'Male',   value: 60, color: '#f97316' },
-    { name: 'Female', value: 35, color: '#8b5cf6' },
-    { name: 'Other',  value: 5,  color: '#94a3b8' },
+    { name: 'Male',   value: 0, color: '#f97316' },
+    { name: 'Female', value: 1, color: '#8b5cf6' },
+    { name: 'Other',  value: 0,  color: '#94a3b8' },
   ];
 
   const COLORS = ['#f97316','#8b5cf6','#22d3ee','#10b981'];

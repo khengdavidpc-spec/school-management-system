@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
 
-const GRADES = ['Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6','Grade 7','Grade 8','Grade 9','Grade 10','Grade 11','Grade 12'];
 const empty = { name: '', grade: '', teacherId: '', capacity: 30, description: ''};
 
 export default function AdminClasses() {
@@ -61,7 +60,7 @@ export default function AdminClasses() {
             <form onSubmit={handleSubmit}>
               <div style={p.formGrid}>
                 <div style={{ ...p.field, gridColumn: '1 / -1' }}><label style={p.label}>Class Name <span style={p.req}>*</span></label><input style={p.input} placeholder="e.g. Morning Class A" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required /></div>
-                <div style={p.field}><label style={p.label}>Grade Level <span style={p.req}>*</span></label><select style={p.input} value={form.grade} onChange={(e) => setForm({ ...form, grade: e.target.value })} required><option value="">Select grade</option>{GRADES.map((g) => <option key={g} value={g}>{g}</option>)}</select></div>
+                <div style={p.field}><label style={p.label}>Grade Level <span style={p.req}>*</span></label><input style={p.input} placeholder="e.g. Level 1, Grade 10" value={form.grade} onChange={(e) => setForm({ ...form, grade: e.target.value })} required /></div>
                 <div style={p.field}><label style={p.label}>Capacity</label><input style={p.input} type="number" min="1" max="100" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: e.target.value })} /></div>
                 <div style={{ ...p.field, gridColumn: '1 / -1' }}>
                   <label style={p.label}>Assign Teacher</label>

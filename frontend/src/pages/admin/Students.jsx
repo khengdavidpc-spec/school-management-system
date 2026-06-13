@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
 
-const GRADES = ['Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6','Grade 7','Grade 8','Grade 9','Grade 10','Grade 11','Grade 12'];
 const empty = { firstName: '', lastName: '', sex: '', phone: '', classId: '', email: '' };
 
 export default function AdminStudents() {
@@ -56,9 +55,11 @@ export default function AdminStudents() {
 
       <div style={p.chipRow}>
         <button style={{ ...p.chip, ...(gradeFilter === 'all' ? p.chipActive : {}) }} onClick={() => setGradeFilter('all')}>All ({students.length})</button>
-        {GRADES.map((g) => { const count = students.filter((st) => st.grade === g).length; if (!count) return null;
-          return <button key={g} style={{ ...p.chip, ...(gradeFilter === g ? p.chipActive : {}) }} onClick={() => setGradeFilter(g)}>{g} ({count})</button>;
-        })}
+        {[...new Set(students.map((st) => st.grade).filter(Boolean))].map((g) => (
+          <button key={g} style={{ ...p.chip, ...(gradeFilter === g ? p.chipActive : {}) }} onClick={() => setGradeFilter(g)}>
+            {g} ({students.filter((st) => st.grade === g).length})
+          </button>
+        ))}
       </div>
 
       {showForm && (

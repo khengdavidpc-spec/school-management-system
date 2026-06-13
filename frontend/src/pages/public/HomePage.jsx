@@ -13,10 +13,10 @@ export default function HomePage() {
   ];
 
   const stats = [
-    { value: '500+', label: 'Students Enrolled' },
-    { value: '50+',  label: 'Teachers' },
-    { value: '30+',  label: 'Classes' },
-    { value: '99%',  label: 'Satisfaction Rate' },
+    { value: '1+', label: 'Students Enrolled' },
+    { value: '2+',  label: 'Teachers' },
+    { value: '2+',  label: 'Classes' },
+    { value: '100%',  label: 'Satisfaction Rate' },
   ];
 
   return (
@@ -58,10 +58,10 @@ export default function HomePage() {
           <div style={s.heroCard}>
             <div style={s.heroCardHeader}>📊 School Overview</div>
             {[
-              { label: 'Total Students',   val: '248', color: '#f97316' },
-              { label: 'Active Teachers',  val: '32',  color: '#8b5cf6' },
-              { label: 'Classes Today',    val: '18',  color: '#22d3ee' },
-              { label: 'Attendance Rate',  val: '94%', color: '#10b981' },
+              { label: 'Total Students',   val: '1', color: '#f97316' },
+              { label: 'Active Teachers',  val: '2',  color: '#8b5cf6' },
+              { label: 'Classes Today',    val: '2',  color: '#22d3ee' },
+              { label: 'Attendance Rate',  val: '100%', color: '#10b981' },
             ].map((item) => (
               <div key={item.label} style={s.heroStat}>
                 <span style={s.heroStatLabel}>{item.label}</span>
