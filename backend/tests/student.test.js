@@ -47,9 +47,9 @@ describe('Students API', () => {
     const res = await request(app)
       .post('/api/students')
       .set('Authorization', `Bearer ${token}`)
-      .send({ firstName: 'John', lastName: 'Doe', email: 'john@student.com', grade: '10A' });
+      .send({ firstName: 'Enter firstname', lastName: 'Enter lastname', email: 'john@student.com', grade: '10A' });
     expect(res.status).toBe(201);
-    expect(res.body.firstName).toBe('John');
+    expect(res.body.firstName).toBe('Enter firstname');
     studentId = res.body.id;
   });
 
