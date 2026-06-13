@@ -3,7 +3,7 @@ const UserModel       = require('./User');
 const StudentModel    = require('./Student');
 const TeacherModel    = require('./Teacher');
 const AttendanceModel = require('./Attendance');
-const ClassModel      = require('./Class');
+const ClassModel      = require('./class');
 const GradeModel      = require('./grade');
 
 const User       = UserModel(sequelize);
