@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../../services/api';
 
 const GRADES = ['Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6','Grade 7','Grade 8','Grade 9','Grade 10','Grade 11','Grade 12'];
-const empty = { name: '', grade: '', teacherId: '', capacity: 30, description: '' };
+const empty = { name: '', grade: '', teacherId: '', capacity: 30, description: ''};
 
 export default function AdminClasses() {
   const [classes, setClasses]   = useState([]);

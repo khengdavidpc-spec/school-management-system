@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../../services/api';
 
 const GRADES = ['Grade 1','Grade 2','Grade 3','Grade 4','Grade 5','Grade 6','Grade 7','Grade 8','Grade 9','Grade 10','Grade 11','Grade 12'];
-const empty = { firstName: '', lastName: '', sex: '', phone: '', classId: '' };
+const empty = { firstName: '', lastName: '', sex: '', phone: '', classId: '', email: '' };
 
 export default function AdminStudents() {
   const [students, setStudents] = useState([]);
@@ -32,7 +32,7 @@ export default function AdminStudents() {
   };
 
   const handleEdit = (s) => {
-    setForm({ firstName: s.firstName, lastName: s.lastName, sex: s.sex || '', phone: s.phone || '', classId: s.classId || '' });
+    setForm({ firstName: s.firstName, lastName: s.lastName, sex: s.sex || '', phone: s.phone || '', classId: s.classId || '', email: s.email || '' });
     setEditId(s.id); setShowForm(true);
   };
 
@@ -71,10 +71,11 @@ export default function AdminStudents() {
             {error && <div style={p.error}>{error}</div>}
             <form onSubmit={handleSubmit}>
               <div style={p.formGrid}>
-                <div style={p.field}><label style={p.label}>First Name <span style={p.req}>*</span></label><input style={p.input} placeholder="John" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} required /></div>
-                <div style={p.field}><label style={p.label}>Last Name <span style={p.req}>*</span></label><input style={p.input} placeholder="Doe" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} required /></div>
+                <div style={p.field}><label style={p.label}>First Name <span style={p.req}>*</span></label><input style={p.input} placeholder="First name" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} required /></div>
+                <div style={p.field}><label style={p.label}>Last Name <span style={p.req}>*</span></label><input style={p.input} placeholder="Last name" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} required /></div>
                 <div style={p.field}><label style={p.label}>Sex <span style={p.req}>*</span></label><select style={p.input} value={form.sex} onChange={(e) => setForm({ ...form, sex: e.target.value })} required><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
                 <div style={p.field}><label style={p.label}>Phone</label><input style={p.input} placeholder="012 345 678" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></div>
+                <div style={{ ...p.field, gridColumn: '1 / -1' }}><label style={p.label}>Email <span style={p.req}>*</span></label><input style={p.input} type="email" placeholder="student@school.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required /></div>
                 <div style={{ ...p.field, gridColumn: '1 / -1' }}>
                   <label style={p.label}>Assign to Class <span style={p.req}>*</span></label>
                   <select style={p.input} value={form.classId} onChange={(e) => setForm({ ...form, classId: e.target.value })} required>

@@ -7,17 +7,19 @@ export default function StudentDashboard() {
   const [myClass, setMyClass]       = useState(null);
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-  useEffect(() => {
+useEffect(() => {
     const load = async () => {
       try {
-        const [rg, ra, rs] = await Promise.all([
-          api.get('/grades/my'), api.get('/attendance/my'), api.get('/students/me'),
+        const [rg, ra, rs, rc] = await Promise.all([
+          api.get('/grades'),
+          api.get('/attendance'),
+          api.get('/students'),
+          api.get('/classes'),
         ]);
+        const me = rs.data.find((s) => s.email?.toLowerCase() === user.email?.toLowerCase());
         setGrades(rg.data.slice(0, 5));
         setAttendance(ra.data);
-        const me = rs.data;
         if (me?.classId) {
-          const rc = await api.get('/classes');
           setMyClass(rc.data.find((c) => c.id === me.classId));
         }
       } catch {}

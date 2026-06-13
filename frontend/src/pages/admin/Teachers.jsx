@@ -60,10 +60,10 @@ export default function AdminTeachers() {
             {error && <div style={p.error}>{error}</div>}
             <form onSubmit={handleSubmit}>
               <div style={p.formGrid}>
-                <div style={p.field}><label style={p.label}>First Name <span style={p.req}>*</span></label><input style={p.input} placeholder="Jane" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} required /></div>
-                <div style={p.field}><label style={p.label}>Last Name <span style={p.req}>*</span></label><input style={p.input} placeholder="Smith" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} required /></div>
+                <div style={p.field}><label style={p.label}>First Name <span style={p.req}>*</span></label><input style={p.input} placeholder="First name" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} required /></div>
+                <div style={p.field}><label style={p.label}>Last Name <span style={p.req}>*</span></label><input style={p.input} placeholder="last name" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} required /></div>
                 <div style={p.field}><label style={p.label}>Sex <span style={p.req}>*</span></label><select style={p.input} value={form.sex} onChange={(e) => setForm({ ...form, sex: e.target.value })} required><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
-                <div style={p.field}><label style={p.label}>Email <span style={p.req}>*</span></label><input style={p.input} type="email" placeholder="jane@school.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required /></div>
+                <div style={p.field}><label style={p.label}>Email <span style={p.req}>*</span></label><input style={p.input} type="email" placeholder="example@school.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required /></div>
                 <div style={p.field}><label style={p.label}>Phone</label><input style={p.input} placeholder="012 345 678" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></div>
                 <div style={p.field}><label style={p.label}>Subject <span style={p.req}>*</span></label><select style={p.input} value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} required><option value="">Select subject</option>{SUBJECTS.map((sub) => <option key={sub} value={sub}>{sub}</option>)}</select></div>
               </div>

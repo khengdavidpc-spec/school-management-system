@@ -1,4 +1,5 @@
-const { Teacher } = require('../models');
+const bcrypt = require('bcryptjs');
+const { Teacher, User } = require('../models');
 
 exports.getAll = async (req, res, next) => {
   try {
@@ -18,6 +19,13 @@ exports.getOne = async (req, res, next) => {
 exports.create = async (req, res, next) => {
   try {
     const teacher = await Teacher.create(req.body);
+    const hashed = await bcrypt.hash('teacher123', 12);
+    await User.create({
+      name: `${req.body.firstName} ${req.body.lastName}`,
+      email: req.body.email,
+      password: hashed,
+      role: 'teacher',
+    }).catch(() => {});
     res.status(201).json(teacher);
   } catch (err) { next(err); }
 };
