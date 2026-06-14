@@ -8,13 +8,25 @@ export default function TeacherStudents() {
   const [classFilter, setClassFilter] = useState('all');
 
   useEffect(() => {
-    const load = async () => {
-      const [rs, rc] = await Promise.all([api.get('/students'), api.get('/classes').catch(() => ({ data: [] }))]);
-      setStudents(rs.data);
-      setClasses(rc.data);
-    };
-    load();
-  }, []);
+  const load = async () => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const [rs, rc, rt] = await Promise.all([api.get('/students'), api.get('/classes'), api.get('/teachers')]);
+    
+    // Find this teacher
+    const me = rt.data.find((t) => t.firstName + ' ' + t.lastName === user.name);
+    
+    // Find my classes
+    const myClasses = rc.data.filter((c) => me && c.teacherId === me.id);
+    const myClassIds = myClasses.map((c) => c.id);
+    
+    // Only show students in my classes
+    const myStudents = rs.data.filter((s) => myClassIds.includes(s.classId));
+    
+    setStudents(myStudents);
+    setClasses(myClasses);
+  };
+  load();
+}, []);
 
   const filtered = students
     .filter((s) => classFilter === 'all' || s.classId === classFilter)

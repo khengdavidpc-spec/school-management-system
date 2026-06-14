@@ -13,9 +13,9 @@ export default function HomePage() {
   ];
 
   const stats = [
-    { value: '1+', label: 'Students Enrolled' },
-    { value: '2+',  label: 'Teachers' },
-    { value: '2+',  label: 'Classes' },
+    { value: '500+', label: 'Students Enrolled' },
+    { value: '20+',  label: 'Teachers' },
+    { value: '20+',  label: 'Classes' },
     { value: '100%',  label: 'Satisfaction Rate' },
   ];
 

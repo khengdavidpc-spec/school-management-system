@@ -19,7 +19,24 @@ export default function TeacherGrades() {
     setGrades(rg.data); setStudents(rs.data);
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+  const load = async () => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const [rg, rs, rc, rt] = await Promise.all([
+      api.get('/grades'), api.get('/students'),
+      api.get('/classes'), api.get('/teachers'),
+    ]);
+    
+    const me = rt.data.find((t) => t.firstName + ' ' + t.lastName === user.name);
+    const myClasses = rc.data.filter((c) => me && c.teacherId === me.id);
+    const myClassIds = myClasses.map((c) => c.id);
+    const myStudentIds = rs.data.filter((s) => myClassIds.includes(s.classId)).map((s) => s.id);
+    
+    setStudents(rs.data.filter((s) => myClassIds.includes(s.classId)));
+    setGrades(rg.data.filter((g) => myStudentIds.includes(g.studentId)));
+  };
+  load();
+}, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setError('');

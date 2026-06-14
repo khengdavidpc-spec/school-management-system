@@ -25,7 +25,27 @@ export default function TeacherAttendance() {
     setRecords(ra.data.map((r) => ({ ...r, studentName: `${r.student?.firstName || ''} ${r.student?.lastName || ''}`.trim() })));
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+  const load = async () => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const [ra, rs, rc, rt] = await Promise.all([
+      api.get('/attendance'), api.get('/students'),
+      api.get('/classes'), api.get('/teachers'),
+    ]);
+    
+    const me = rt.data.find((t) => t.firstName + ' ' + t.lastName === user.name);
+    const myClasses = rc.data.filter((c) => me && c.teacherId === me.id);
+    const myClassIds = myClasses.map((c) => c.id);
+    const myStudentIds = rs.data.filter((s) => myClassIds.includes(s.classId)).map((s) => s.id);
+    
+    setClasses(myClasses);
+    setStudents(rs.data.filter((s) => myClassIds.includes(s.classId)));
+    setRecords(ra.data
+      .filter((r) => myStudentIds.includes(r.studentId))
+      .map((r) => ({ ...r, studentName: `${r.student?.firstName || ''} ${r.student?.lastName || ''}`.trim() })));
+  };
+  load();
+}, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setError('');
