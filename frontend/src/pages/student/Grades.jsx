@@ -5,11 +5,18 @@ export default function StudentGrades() {
   const [grades, setGrades] = useState([]);
 
   useEffect(() => {
-    const load = async () => {
-      try { const res = await api.get('/grades/my'); setGrades(res.data); } catch {}
-    };
-    load();
-  }, []);
+  const load = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const [rg, rs] = await Promise.all([api.get('/grades'), api.get('/students')]);
+      const me = rs.data.find((s) => s.email?.toLowerCase() === user.email?.toLowerCase());
+      if (me) {
+        setGrades(rg.data.filter((g) => g.studentId === me.id));
+      }
+    } catch {}
+  };
+  load();
+}, []);
 
   const getGL = (score) => {
     if (score >= 90) return { l: 'A', c: '#10b981', bg: '#d1fae5', label: 'Excellent' };

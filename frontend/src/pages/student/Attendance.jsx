@@ -4,14 +4,19 @@ import api from '../../services/api';
 export default function StudentAttendance() {
   const [records, setRecords] = useState([]);
   useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await api.get('/attendance/my');
-        setRecords(res.data.map((r) => ({ ...r, studentName: `${r.student?.firstName || ''} ${r.student?.lastName || ''}`.trim() })));
-      } catch {}
-    };
-    load();
-  }, []);
+  const load = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const [ra, rs] = await Promise.all([api.get('/attendance'), api.get('/students')]);
+      const me = rs.data.find((s) => s.email?.toLowerCase() === user.email?.toLowerCase());
+      if (me) {
+        const myRecords = ra.data.filter((r) => r.studentId === me.id);
+        setRecords(myRecords.map((r) => ({ ...r, studentName: `${r.student?.firstName || ''} ${r.student?.lastName || ''}`.trim() })));
+      }
+    } catch {}
+  };
+  load();
+}, []);
 
   const present = records.filter((r) => r.status === 'present').length;
   const absent  = records.filter((r) => r.status === 'absent').length;
