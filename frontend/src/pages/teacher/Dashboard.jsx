@@ -19,7 +19,7 @@ export default function TeacherDashboard() {
   }, []);
 
   const cards = [
-    { label: 'My Classes',         value: stats.classes,    icon: '📚', color: '#8b5cf6', bg: '#f5f3ff' },
+    { label: 'Classes',         value: stats.classes,    icon: '📚', color: '#8b5cf6', bg: '#f5f3ff' },
     { label: 'Total Students',     value: stats.students,   icon: '🎓', color: '#f97316', bg: '#fff7ed' },
     { label: 'Attendance Marked',  value: stats.attendance, icon: '📋', color: '#10b981', bg: '#ecfdf5' },
     { label: 'Grades Entered',     value: stats.grades,     icon: '📊', color: '#22d3ee', bg: '#ecfeff' },
